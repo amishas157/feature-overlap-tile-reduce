@@ -3,26 +3,22 @@
 var tileReduce = require("tile-reduce");
 var path = require("path");
 
-var turf = require("turf");
+var featureCollection = require("turf-featurecollection");
 
-var featureArray = [];
 
 tileReduce({
-  bbox: [68.027, 7.798, 97.690, 36.067], // india
-  zoom: 12,
+  bbox: [7.409038,43.516333,7.533167,43.7519311], // monaco
+  zoom: 16,
   map: path.join(__dirname, "/map.js"),
   sources: [{
-    name: 'india',
-    mbtiles: path.join(__dirname, "/india.mbtiles"),
+    name: 'moroco',
+    mbtiles: path.join(__dirname, "/primary.mbtiles"),
     raw: false,
   }]
 })
-.on('reduce', function(amenities) {
-  amenities.forEach(function(feature) {
-    featureArray.push(feature);
-  });
+.on('reduce', function() {
+
 })
-.on('end', function(fc) {
-  var fc = JSON.stringify(turf.featureCollection(featureArray));
-  // console.log(fc + '\n');
+.on('end', function() {
+
 });
