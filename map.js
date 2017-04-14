@@ -65,8 +65,16 @@ function getOverlaps(natural, feature, naturalTagIntersection, featureTagInterse
         naturalPoly = polygon([natural.geometry.coordinates], natural.properties);
         featurePoly = polygon([feature.geometry.coordinates], feature.properties);
         intersect = turf.intersect(naturalPoly, featurePoly);
-        if (intersect && intersect.geometry.type === 'Polygon' && ((area(intersect) / area(naturalPoly)) > 0.1)) {
-            overlap.push(['case1', natural['properties']['id'], feature['properties']['id'], naturalTagIntersection, featureTagIntersection]);      
+        if (intersect && intersect.geometry.type === 'Polygon' && (intersect.geometry.coordinates[0].length > 4)) {
+            if (intersect.geometry.coordinates[0].length === 5) {
+                var d1 = turf.distance(intersect.geometry.coordinates[0][0], intersect.geometry.coordinates[0][1]);
+                var d2 = turf.distance(intersect.geometry.coordinates[0][1], intersect.geometry.coordinates[0][2]);
+                if (!(d1 < 0.0001 || d2 < 0.0001)) {
+                    overlap.push(['case1', natural['properties']['id'], feature['properties']['id'], naturalTagIntersection, featureTagIntersection]);            
+                }
+            } else {
+                overlap.push(['case1', natural['properties']['id'], feature['properties']['id'], naturalTagIntersection, featureTagIntersection]);      
+            }
         }
     } else if (isClosedWay(natural.geometry.coordinates) && (!isClosedWay(feature.geometry.coordinates))) {
         // only overlapping feature is closed
