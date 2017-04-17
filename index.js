@@ -7,12 +7,13 @@ var featureCollection = require("turf-featurecollection");
 
 
 tileReduce({
-  bbox: [7.409038,43.516333,7.533167,43.7519311], // monaco
+  bbox: [-178.2,6.6,-49.0,83.3], // usa
   zoom: 16,
   map: path.join(__dirname, "/map.js"),
+  maxWorkers: 8,
   sources: [{
-    name: 'moroco',
-    mbtiles: path.join(__dirname, "/primary.mbtiles"),
+    name: 'usa',
+    mbtiles: path.join(__dirname, "/america.mbtiles"),
     raw: false,
   }]
 })
