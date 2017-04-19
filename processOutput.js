@@ -5,7 +5,7 @@ var ndjson = require('ndjson');
 var output = {};
 var UniqueIds = [];
 
-fs.createReadStream('final-result.text')
+fs.createReadStream('outputFeatures.json')
   .pipe(ndjson.parse())
   .on('data', function(obj) {
     obj.forEach(function(arr) {

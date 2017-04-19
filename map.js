@@ -19,8 +19,9 @@ var primaryTags = ['aerialway', 'aeroway', 'amenity', 'barrier', 'boundary', 'bu
 
 var relationsIndexFile = fs.readFileSync('relations.json');
 var relationsIndex = JSON.parse(relationsIndexFile.toString());
+
 module.exports = function(data, tile, writeData, done) {
-  var layer = data.moroco.output;
+  var layer = data.usa.output;
   var overlaps = [];
 
   var naturals = layer.features;
@@ -38,6 +39,7 @@ module.exports = function(data, tile, writeData, done) {
       });
       var naturalId = natural['properties']['id'];
       var featureId = feature['properties']['id'];
+      try {
       if (naturalId !== featureId) {
         if (relationsIndex.hasOwnProperty(naturalId) && relationsIndex.hasOwnProperty(featureId)) {
           var arr = arrayIntersection(relationsIndex[naturalId], relationsIndex[featureId]);
@@ -48,10 +50,14 @@ module.exports = function(data, tile, writeData, done) {
           overlaps = overlaps.concat(getOverlaps(natural, feature, naturalTagIntersection, featureTagIntersection));
         }
       }
+     } catch(error) {
+	fs.appendFileSync('errors.json', naturalId + ',' + featureId + ',' + JSON.stringify(error) + '\n', 'utf8');
+    }   
     });
   });
   if (overlaps.length > 0) {
-    writeData(JSON.stringify(overlaps) + '\n');
+    fs.appendFileSync('outputFeatures.json', JSON.stringify(overlaps) + '\n', 'utf8');
+    //writeData(JSON.stringify(overlaps) + '\n');
   }
   done(null, null);
 };
