@@ -9,9 +9,10 @@ fs.createReadStream('outputFeatures.json')
   .pipe(ndjson.parse())
   .on('data', function(obj) {
     obj.forEach(function(arr) {
-        var key = JSON.stringify(arr[1]) + ',' + JSON.stringify(arr[2]);
-        var reverse = JSON.stringify(arr[2]) + ',' + JSON.stringify(arr[1]);
-        if (UniqueIds.indexOf(key) === -1 && UniqueIds.indexOf(reverse) === -1) {
+        var keyId = JSON.stringify(arr[1]) + ',' + JSON.stringify(arr[2]);
+        var reverseId = JSON.stringify(arr[2]) + ',' + JSON.stringify(arr[1]);
+        if (UniqueIds.indexOf(keyId) === -1 && UniqueIds.indexOf(reverseId) === -1) {
+            UniqueIds.push(keyId);
             var key = JSON.stringify(arr[3]) + ',' + JSON.stringify(arr[4]);
             var reverse = JSON.stringify(arr[4]) + ',' + JSON.stringify(arr[3]);
             if (Object.keys(output).indexOf(key) !== -1) {
