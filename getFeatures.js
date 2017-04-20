@@ -2,12 +2,12 @@ var argv = require('minimist')(process.argv.slice(2));
 var fs = require('fs');
 var ndjson = require('ndjson');
 
-if (!argv.primaryTag || !argv.anotherPrimaryTag) {
+if (!argv.primaryTagValue || !argv.anotherPrimaryTagValue) {
     process.exit(0);
 }
 
-var primaryTag = argv.primaryTag;
-var anotherPrimaryTag = argv.anotherPrimaryTag;
+var primaryTagValue = argv.primaryTagValue;
+var anotherPrimaryTagValue = argv.anotherPrimaryTagValue;
 
 var output = {};
 var UniqueIds = [];
@@ -22,8 +22,15 @@ fs.createReadStream('outputFeatures.json')
             UniqueIds.push(keyId);
             var primaryTagCollection = Object.keys(arr[3]);
             var anotherPrimaryTagCollection = Object.keys(arr[4]);
-            if ((primaryTagCollection.indexOf(primaryTag) !== -1 && anotherPrimaryTagCollection.indexOf(anotherPrimaryTag) !== -1) ||
-                (anotherPrimaryTagCollection.indexOf(primaryTag) !== -1 && primaryTagCollection.indexOf(anotherPrimaryTag) !== -1)) {
+            var primaryKey = primaryTagValue.split(':')[0];
+            var primaryValue = primaryTagValue.split(':')[1];
+            var anotherPrimaryKey = anotherPrimaryTagValue.split(':')[0];
+            var anotherPrimaryValue = anotherPrimaryTagValue.split(':')[1];
+
+            if ((primaryTagCollection.indexOf(primaryKey) !== -1 && anotherPrimaryTagCollection.indexOf(anotherPrimaryKey) !== -1 &&
+                arr[3][primaryKey] === primaryValue && arr[4][anotherPrimaryKey] === anotherPrimaryValue) ||
+                (anotherPrimaryTagCollection.indexOf(primaryKey) !== -1 && primaryTagCollection.indexOf(anotherPrimaryKey) !== -1 &&
+                arr[4][primaryKey] === primaryValue && arr[3][anotherPrimaryKey] === anotherPrimaryValue)) {
                 if (output[arr[1]]) {
                     output[arr[1]].push(arr[2]);
                 } else {
